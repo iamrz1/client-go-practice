@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"path/filepath"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -10,7 +11,7 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
-	//kutilCoreV1 "github.com/appscode/kutil/core/v1"
+	kutilcorev1 "github.com/appscode/kutil/core/v1"
 	kutilappsv1 "github.com/appscode/kutil/apps/v1"
 	. "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -77,6 +78,7 @@ func main(){
 	fmt.Println("*  ", res)
 
 	// Patch deployment
+	fmt.Println("Patching deployment...")
 	res, verb, err = kutilappsv1.PatchDeployment(clientSet,deployment, func(in *appsv1.Deployment) *appsv1.Deployment {
 		in.Spec.Template.Labels = map[string]string{
 			"app": "book-server",
@@ -88,8 +90,65 @@ func main(){
 		fmt.Println("Verb = ",verb)
 		panic(err)
 	}
-	fmt.Println("Deployment Updated")
+	fmt.Println("Deployment Patched")
 	fmt.Println("*  ", res)
 
+	//Delete Deployment
+	err = kutilappsv1.DeleteDeployment(clientSet,deployment.ObjectMeta)
+	if err != nil {
+		fmt.Println("Deployment Delete failed")
+		panic(err)
+	}
+
+
+	service := &corev1.Service{
+		ObjectMeta: ObjectMeta{
+			Name: "book-server",
+			Namespace:NamespaceDefault,
+		},
+		Spec: corev1.ServiceSpec{
+			Type: corev1.ServiceTypeClusterIP,
+			Selector: map[string]string{
+				"app": "book-server",
+			},
+			Ports: []corev1.ServicePort{
+				{
+					Name:       "book-server",
+					Port:       80,
+					TargetPort: intstr.FromInt(8080),
+				},
+			},
+		},
+	}
+
+	// Create Service
+	fmt.Println("Creating Service...")
+	resSer, verb, err := kutilcorev1.CreateOrPatchService(clientSet,service.ObjectMeta, func(in *corev1.Service) *corev1.Service {
+		in.Spec = service.Spec
+		return in
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Service Created")
+	fmt.Println("*  ", resSer)
+
+	// Patch Service
+	fmt.Println("Patching service...")
+	resSer, verb, err = kutilcorev1.PatchService(clientSet,service, func(in *corev1.Service) *corev1.Service {
+		in.Spec.Type = corev1.ServiceTypeClusterIP
+		return in
+	})
+	if err != nil {
+		fmt.Println("Verb = ",verb)
+		panic(err)
+	}
+	fmt.Println("Service Patched")
+	fmt.Println("*  ", res)
+
+	//Delete Service
+	//??
+
 }
+
 func int32Ptr(i int32) *int32 { return &i }
