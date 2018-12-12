@@ -155,7 +155,8 @@ func main(){
 	fmt.Println("*  ", res)
 
 	//Delete Service
-	//??
+	//
+	err = clientSet.CoreV1().Services(corev1.NamespaceDefault).Delete("book-server",NewDeleteOptions(0))
 
 }
 
