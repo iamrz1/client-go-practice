@@ -107,7 +107,7 @@ func main(){
 			Namespace:NamespaceDefault,
 		},
 		Spec: corev1.ServiceSpec{
-			Type: corev1.ServiceTypeClusterIP,
+			Type: corev1.ServiceTypeNodePort,
 			Selector: map[string]string{
 				"app": "book-server",
 			},
@@ -136,7 +136,14 @@ func main(){
 	// Patch Service
 	fmt.Println("Patching service...")
 	resSer, verb, err = kutilcorev1.PatchService(clientSet,service, func(in *corev1.Service) *corev1.Service {
-		in.Spec.Type = corev1.ServiceTypeClusterIP
+		in.Spec.Ports =  []corev1.ServicePort{
+			{
+				Name:       "book-server",
+				Port:       81,
+				TargetPort: intstr.FromInt(8080),
+				NodePort: 30078,
+			},
+		}
 		return in
 	})
 	if err != nil {
