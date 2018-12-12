@@ -76,6 +76,7 @@ func main(){
 	}
 	fmt.Println("Deployment Created")
 	fmt.Println("*  ", res)
+	fmt.Println("Verb = ",verb)
 
 	// Patch deployment
 	fmt.Println("Patching deployment...")
@@ -87,12 +88,11 @@ func main(){
 		return  in
 	})
 	if err != nil {
-		fmt.Println("Verb = ",verb)
 		panic(err)
 	}
 	fmt.Println("Deployment Patched")
 	fmt.Println("*  ", res)
-
+	fmt.Println("Verb = ",verb)
 	//Delete Deployment
 	err = kutilappsv1.DeleteDeployment(clientSet,deployment.ObjectMeta)
 	if err != nil {
@@ -123,7 +123,7 @@ func main(){
 
 	// Create Service
 	fmt.Println("Creating Service...")
-	resSer, verb, err := kutilcorev1.CreateOrPatchService(clientSet,service.ObjectMeta, func(in *corev1.Service) *corev1.Service {
+	serviceOutput, verb, err := kutilcorev1.CreateOrPatchService(clientSet,service.ObjectMeta, func(in *corev1.Service) *corev1.Service {
 		in.Spec = service.Spec
 		return in
 	})
@@ -131,11 +131,12 @@ func main(){
 		panic(err)
 	}
 	fmt.Println("Service Created")
-	fmt.Println("*  ", resSer)
+	fmt.Println("*  ", serviceOutput)
+	fmt.Println("Verb = ",verb)
 
 	// Patch Service
 	fmt.Println("Patching service...")
-	resSer, verb, err = kutilcorev1.PatchService(clientSet,service, func(in *corev1.Service) *corev1.Service {
+	serviceOutput, verb, err = kutilcorev1.PatchService(clientSet,service, func(in *corev1.Service) *corev1.Service {
 		in.Spec.Ports =  []corev1.ServicePort{
 			{
 				Name:       "book-server",
