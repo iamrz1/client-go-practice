@@ -14,9 +14,6 @@ import (
 	kutilcorev1 "github.com/appscode/kutil/core/v1"
 	kutilappsv1 "github.com/appscode/kutil/apps/v1"
 	. "k8s.io/apimachinery/pkg/apis/meta/v1"
-	ct "github.com/iamrz1/client-go-practice-ho/pkg/client/clientset/versioned"
-	//_ "k8s.io/code-generator"
-	crontab "github.com/iamrz1/client-go-practice-ho/pkg/apis/examplecrd.com/v1"
 )
 func main(){
 	kubeFlag := flag.String("kubeconfig",filepath.Join(homedir.HomeDir(),".kube","config"),"Path to kubeconfig")
@@ -29,34 +26,6 @@ func main(){
 		if err != nil {
 		panic(err)
 	}
-	cs, err := ct.NewForConfig(config)
-	if err != nil {
-		panic(err)
-	}
-	cron := &crontab.CronTab{
-		ObjectMeta: ObjectMeta{
-			Name:"my-cron-tab",
-			Namespace:NamespaceDefault,
-		},
-		Spec: crontab.CronTabSpec{
-			Replicas: 2,
-			Template:crontab.CronTabPodTemplate{
-				ObjectMeta: ObjectMeta{
-					Name:"cron-pod",
-					Namespace:NamespaceDefault,
-				},
-				Spec: corev1.PodSpec{
-
-
-				},
-			},
-		},
-	}
-	fmt.Println("Creating cronTab")
-	clientSet.CoreV1().Services(corev1.NamespaceDefault)
-	newct, err := cs.ExamplecrdV1().CronTabs(NamespaceDefault).Create(cron)
-	fmt.Println("cronTab created")
-	fmt.Println("cronTab = ",newct)
 
 	deployment := &appsv1.Deployment{
 		ObjectMeta: ObjectMeta{

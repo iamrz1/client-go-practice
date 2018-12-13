@@ -11,3 +11,4 @@ import:
   - kubernetes
   - tools/clientcmd
   - util/homedir
+- package: k8s.io/code-generator
