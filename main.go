@@ -47,7 +47,6 @@ func main(){
 				},
 				Spec: corev1.PodSpec{
 
-
 				},
 			},
 		},
