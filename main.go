@@ -53,10 +53,17 @@ func main(){
 		},
 	}
 	fmt.Println("Creating cronTab")
-	clientSet.CoreV1().Services(corev1.NamespaceDefault)
 	newct, err := cs.ExamplecrdV1().CronTabs(NamespaceDefault).Create(cron)
 	fmt.Println("cronTab created")
 	fmt.Println("cronTab = ",newct)
+
+	fmt.Println("Deleting cronTab")
+	err = cs.ExamplecrdV1().CronTabs(NamespaceDefault).Delete(newct.Name,NewDeleteOptions(0))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("cronTab Deleted")
+
 
 	deployment := &appsv1.Deployment{
 		ObjectMeta: ObjectMeta{
