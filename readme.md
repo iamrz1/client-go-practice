@@ -1,5 +1,5 @@
 ## Practice repo (client-go/CRD) 
-Contains codes to implement calls to kube-api-server from go to practice CRUD functions on kubernetes/custom resources.
+Contains codes to implement calls to kube-api-server from go to test kubernetes/custom resources.
 
 ### Using client-go (or any custom client)
 In go program, do:
