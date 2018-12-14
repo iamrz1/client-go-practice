@@ -13,7 +13,7 @@ import (
 type CronTab struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              CronTabSpec `json:"spec"`
+	Spec CronTabSpec  `json:"spec"`
 }
 
 //CronTabSpec Specification
@@ -24,8 +24,8 @@ type CronTabSpec struct {
 
 //CronTabPodTemplate Specification
 type CronTabPodTemplate struct {
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              apiv1.PodSpec `json:"spec"`
+	metav1.ObjectMeta	`json:"metadata,omitempty"`
+	Spec apiv1.PodSpec	`json:"spec"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -34,6 +34,5 @@ type CronTabPodTemplate struct {
 type CronTabList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
-
 	Items []CronTabList `json:"items"`
 }

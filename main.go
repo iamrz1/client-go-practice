@@ -11,12 +11,12 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
+	_ "k8s.io/code-generator/_examples/crd/apis/example/v1"
 	kutilcorev1 "github.com/appscode/kutil/core/v1"
 	kutilappsv1 "github.com/appscode/kutil/apps/v1"
 	. "k8s.io/apimachinery/pkg/apis/meta/v1"
 	ct "github.com/iamrz1/client-go-practice-ho/pkg/client/clientset/versioned"
-	//_ "k8s.io/code-generator"
-	crontab "github.com/iamrz1/client-go-practice-ho/pkg/apis/examplecrd.com/v1"
+	crontabv1 "github.com/iamrz1/client-go-practice-ho/pkg/apis/examplecrd.com/v1"
 )
 func main(){
 	kubeFlag := flag.String("kubeconfig",filepath.Join(homedir.HomeDir(),".kube","config"),"Path to kubeconfig")
@@ -25,22 +25,18 @@ func main(){
 	if err != nil {
 		panic(err)
 	}
-	clientSet, err := kubernetes.NewForConfig(config)
-		if err != nil {
-		panic(err)
-	}
 	cs, err := ct.NewForConfig(config)
 	if err != nil {
 		panic(err)
 	}
-	cron := &crontab.CronTab{
+	cron := &crontabv1.CronTab{
 		ObjectMeta: ObjectMeta{
 			Name:"my-cron-tab",
 			Namespace:NamespaceDefault,
 		},
-		Spec: crontab.CronTabSpec{
+		Spec: crontabv1.CronTabSpec{
 			Replicas: 2,
-			Template:crontab.CronTabPodTemplate{
+			Template:crontabv1.CronTabPodTemplate{
 				ObjectMeta: ObjectMeta{
 					Name:"cron-pod",
 					Namespace:NamespaceDefault,
@@ -63,7 +59,10 @@ func main(){
 	}
 	fmt.Println("cronTab Deleted")
 
-
+	clientSet, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		panic(err)
+	}
 	deployment := &appsv1.Deployment{
 		ObjectMeta: ObjectMeta{
 			Name: "book-server",

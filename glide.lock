@@ -1,5 +1,5 @@
 hash: ccd13820910dbfef1c0205773eab3bb5fa79a630d749d1369e3da3b4aa14fd65
-updated: 2018-12-13T15:58:52.080992762+06:00
+updated: 2018-12-14T11:02:55.146776918+06:00
 imports:
 - name: github.com/appscode/go
   version: 584aaa73af837f112c0a471be398ea837341c330
@@ -260,6 +260,8 @@ imports:
   - util/retry
 - name: k8s.io/code-generator
   version: 3a2206dd6a78497deceb3ae058417fdeb2036c7e
+  subpackages:
+  - _examples/crd/apis/example/v1
 - name: k8s.io/klog
   version: 8139d8cb77af419532b33dfa7dd09fbc5f1d344f
 - name: k8s.io/kube-openapi
