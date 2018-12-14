@@ -1,4 +1,4 @@
-## practice repo (client-go/CRD) 
+## Practice repo (client-go/CRD) 
 Contains codes to implement calls to kube-api-server from go to practice CRUD functions on kubernetes/custom resources.
 
 ### Using client-go (or any custom client)
